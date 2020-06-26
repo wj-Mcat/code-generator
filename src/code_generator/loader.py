@@ -19,7 +19,7 @@ limitations under the License.
 """
 from __future__ import annotations
 import os
-from typing import Dict
+from typing import Dict, Optional
 from abc import ABCMeta
 
 from jinja2 import Template
@@ -39,7 +39,7 @@ class Loader(metaclass=ABCMeta):
         lazy load plugins
         """
         self.files: Dict[str, str] = {}
-        log.info('load the plugins from : %s', file_or_dir)
+        log.info('load the files from : %s', file_or_dir)
         if not os.path.exists(file_or_dir):
             log.warning('plugin file/dir doesn"t exist, there are '
                         'no plugins to load')
@@ -82,11 +82,17 @@ class TemplateLoader(Loader):
     def __init__(self, file_or_dir: str = 'templates'):
         super(TemplateLoader, self).__init__(file_or_dir)
 
-    def load_templates(self) -> Dict[str, Template]:
+    def load_templates(self, plugins: Optional[str] = None
+                       ) -> Dict[str, Template]:
         """load template"""
         self._load_files()
         templates: Dict[str, Template] = {}
         for key, template in self.files.items():
+            if plugins is not None:
+                template = "{plugin}\n{template}".format(
+                    plugin=plugins, template=template
+                )
+            log.info(template)
             templates[key] = Template(template)
         return templates
 
@@ -102,7 +108,7 @@ class PluginLoader(Loader):
 
     def load_to_file(self) -> str:
         files = self._load_plugins()
-        return '\n'.join(files)
+        return '\n'.join(files.values())
 
     def load_plugin_descriptions(self) -> Dict[str, str]:
         descriptions: Dict[str, str] = {}
@@ -113,12 +119,18 @@ class PluginLoader(Loader):
             attrs = dir(module)
             macros = [(attr, getattr(module, attr)) for attr in attrs
                       if isinstance(getattr(module, attr), Macro)]
-
-            # find macros description from html node description using bs4
-            
-
+            # first we only load the name of plugin
+            for macro_name, macro in macros:
+                if macro_name not in descriptions:
+                    descriptions[macro_name] = macro_name
 
         return descriptions
 
-
-
+    def load_to_module(self):
+        """
+        load plugins to the instance of module type
+        :return:
+        """
+        plugin_content = self.load_to_file()
+        module = Template(plugin_content).module
+        return module

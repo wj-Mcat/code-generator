@@ -1,0 +1,15 @@
+<h1>{{ model }}</h1>
+
+<ul>
+{%- for column in columns %}
+    <li>
+    {%- if column.name == "1" %}
+        {{ number_input(column) }}
+    {%- elif column.name == "22" %}
+        {{ date_input(column) }}
+    {%- else %}
+        <h1>ssss</h1>
+    {%- endif %}
+    </li>
+{%- endfor %}
+</ul>

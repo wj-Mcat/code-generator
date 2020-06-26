@@ -18,7 +18,12 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 from __future__ import annotations
+
+import json
 from argparse import ArgumentParser
+import os
+
+from jinja2 import Template
 
 from .config import get_logger
 from .loader import TemplateLoader, PluginLoader
@@ -32,12 +37,33 @@ def run_server():
     pass
 
 
+def _save_to_file(template_dir: str, file_name: str, content: str):
+    if not os.path.exists(template_dir):
+        os.mkdir(template_dir)
+    path = os.path.join(template_dir, file_name)
+    with open(path, 'w', encoding='utf-8') as f:
+        f.write(content)
+
+
+def _read_to_json(file: str) -> dict:
+    """read json file to json data"""
+    file_path = os.path.join(os.getcwd(), file)
+    print(file_path)
+    if not os.path.exists(file_path):
+        raise FileNotFoundError(f'file <{file}> not found')
+    with open(file_path, 'r+', encoding='utf-8') as f:
+        return json.load(f)
+
+
 def render_by_config():
-    file = args['file']
-    templates = TemplateLoader(file).load_templates()
-    plugin_file = PluginLoader(file).load_to_file()
-
-
+    config = _read_to_json(args['config'])
+    plugins = PluginLoader(args['plugins']).load_to_file()
+    log.info(plugins)
+    templates = TemplateLoader(args['templates']).load_templates(plugins)
+    for name, template in templates.items():
+        result = template.render(config)
+        base_name = os.path.basename(args['templates']) + '_result'
+        _save_to_file(base_name, name, result)
 
 
 def main():
@@ -49,15 +75,16 @@ def main():
     serve_parser.add_argument('--file', default='config.json', type=str)
     serve_parser.set_defaults(func=run_server)
 
-    config_parser = subparsers.add_parser(name='config')
-    config_parser.add_argument('--file', default='config.json', type=str)
-    config_parser.add_argument('--template', default='flask,vue', type=str)
+    config_parser = subparsers.add_parser(name='render')
+    config_parser.add_argument('--config', type=str, default='./config.json')
+    config_parser.add_argument('--templates', type=str, default='./templates')
+    config_parser.add_argument('--plugins', type=str, default='./plugins')
     config_parser.set_defaults(func=render_by_config)
 
     local_args = parser.parse_args()
     log.info(args)
     args.update(local_args.__dict__)
-    local_args.func(args)
+    local_args.func()
 
 
 if __name__ == '__main__':
