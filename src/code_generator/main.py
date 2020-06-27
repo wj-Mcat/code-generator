@@ -23,21 +23,21 @@ import json
 from argparse import ArgumentParser
 import os
 
-from jinja2 import Template
-
 from .config import get_logger
 from .loader import TemplateLoader, PluginLoader
 
-
+# pylint: disable=invalid-name
 log = get_logger()
-args = {}
+# pylint: disable=invalid-name
+args: dict = {}
 
 
 def run_server():
-    pass
+    """we can run a simple http server to display the code-generator"""
 
 
 def _save_to_file(template_dir: str, file_name: str, content: str):
+    """save template result to the file"""
     if not os.path.exists(template_dir):
         os.mkdir(template_dir)
     path = os.path.join(template_dir, file_name)
@@ -56,6 +56,7 @@ def _read_to_json(file: str) -> dict:
 
 
 def render_by_config():
+    """render the template with config file mode"""
     config = _read_to_json(args['config'])
     plugins = PluginLoader(args['plugins']).load_to_file()
     log.info(plugins)
@@ -67,6 +68,7 @@ def render_by_config():
 
 
 def main():
+    """main entry of the code-generator"""
     parser = ArgumentParser()
     subparsers = parser.add_subparsers(help='sub command')
     serve_parser = subparsers.add_parser(name='serve')

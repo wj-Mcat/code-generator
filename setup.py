@@ -26,18 +26,20 @@ with open("./VERSION", 'r+') as f:
 with open('./requirements.txt', 'r+') as f:
     requirements = f.readlines()
 
+with open('./README.md', 'r+') as f:
+    long_description = f.read()
+
 setup(
     name='code-generator',
     version=VERSION,
-    description="a simple code generator for ",
-    long_description='a templated code generator for all language, especially '
-                     'for boring code',
+    description="a simple code generator for all-language",
+    long_description=long_description,
     keywords='code-gen,code-generator,python,code-snippet',
     author='wj-Mcat',
     author_email='1435130236@qq.com',
     license='Apache 2',
     packages=find_packages('src'),
-    package_dir = {
+    package_dir={
         "": "src"
     },
     include_package_data=True,

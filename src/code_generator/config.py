@@ -21,16 +21,16 @@ from __future__ import annotations
 
 import logging
 
-from jinja2 import Template
-
 
 def get_logger():
     """get the logger"""
     log_formatter = logging.Formatter(
-        fmt='%(asctime)s - %(name)s - %(levelname)s - %(filename)s - %(funcName)s - %(message)s')
+        fmt='%(asctime)s - %(name)s - %(levelname)s - %(filename)s - '
+            '%(funcName)s - %(message)s')
 
-    logger = logging.getLogger("CodeGenerator")
-    logger.handlers = []
+    logger = logging.getLogger('CodeGenerator')
+
+    logger.handlers.clear()
     logger.setLevel(logging.DEBUG)
     logger.propagate = False
 

@@ -27,10 +27,11 @@ from jinja2.runtime import Macro
 
 from .config import get_logger
 
-
+# pylint: disable=invalid-name
 log = get_logger()
 
 
+# pylint: disable=too-few-public-methods
 class Loader(metaclass=ABCMeta):
     """load the plugins from local or default path"""
     def __init__(self, file_or_dir: str):
@@ -77,6 +78,7 @@ class Loader(metaclass=ABCMeta):
                     self.files[file_name] = code
 
 
+# pylint: disable=too-few-public-methods
 class TemplateLoader(Loader):
     """template loader"""
     def __init__(self, file_or_dir: str = 'templates'):
@@ -89,7 +91,7 @@ class TemplateLoader(Loader):
         templates: Dict[str, Template] = {}
         for key, template in self.files.items():
             if plugins is not None:
-                template = "{plugin}\n{template}".format(
+                template = '{plugin}\n{template}'.format(
                     plugin=plugins, template=template
                 )
             log.info(template)
@@ -103,24 +105,30 @@ class PluginLoader(Loader):
         super(PluginLoader, self).__init__(file_or_dir)
 
     def _load_plugins(self) -> Dict[str, str]:
+        """load plugins to dict"""
         self._load_files()
         return self.files
 
     def load_to_file(self) -> str:
+        """load plugins content to a single file content, so we can compile it
+        and add it to all template"""
         files = self._load_plugins()
         return '\n'.join(files.values())
 
     def load_plugin_descriptions(self) -> Dict[str, str]:
+        """we can set plugin with different description, so that we can use it
+        to select different plugins to different field"""
         descriptions: Dict[str, str] = {}
         plugins = self._load_plugins()
 
-        for name, plugin in plugins.items():
+        for _, plugin in plugins.items():
             module = Template(plugin).module
             attrs = dir(module)
             macros = [(attr, getattr(module, attr)) for attr in attrs
                       if isinstance(getattr(module, attr), Macro)]
             # first we only load the name of plugin
-            for macro_name, macro in macros:
+            # TODO -> we can refactor it later
+            for macro_name, _ in macros:
                 if macro_name not in descriptions:
                     descriptions[macro_name] = macro_name
 
