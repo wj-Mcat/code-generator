@@ -1,10 +1,18 @@
 {
-  "model": "基础模型",
+  "model": "user",
+  "description": "用户管理",
   "columns": [{
-    "name": "1"
+    "field": "name",
+    "description": "姓名",
+    "type": "str"
   },{
-    "name": "22"
+    "field": "sex",
+    "description": "性别",
+    "type": "int"
   },{
-    "name": "33"
+    "field": "role_id",
+    "description": "角色",
+    "type": "str",
+    "plugin": "auto_complete"
   }]
 }

@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 build.sh
 .idea/
+./src/code_generator.egg-info/

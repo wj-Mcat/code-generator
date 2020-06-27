@@ -62,7 +62,7 @@ def render_by_config():
     log.info(plugins)
     templates = TemplateLoader(args['templates']).load_templates(plugins)
     for name, template in templates.items():
-        result = template.render(config)
+        result = template.render(**config)
         base_name = os.path.basename(args['templates']) + '_result'
         _save_to_file(base_name, name, result)
 

@@ -1,0 +1,80 @@
+<template>
+  <div class="container">
+    <el-card class="box-card margin-space" style="margin:20px;">
+      <el-form :model="form" label-width="120px" :rules="rules" ref="form">
+      {%- for column in columns -%}
+          {% if column.type == "str" %}
+        <el-form-item label="{{ column.description }}" prop="{{ column.field }}">
+          <el-input v-model="form.{{ column.field }}" placeholder="请输入{{ column.description }}" />
+        </el-form-item>
+          {%- elif column.type == "int" %}
+        <el-input-number style="width:100%;" v-model="form.{{ column.field }}"
+            :min="0" :max="100" label="请输入{{ column.description }}">
+        </el-input-number>
+          {% else %}
+          {% endif %}
+      {%- endfor -%}
+        <el-form-item>
+          <el-button type="primary" @click="submit">提 交</el-button>
+          <el-button @click="reset_form">重 置</el-button>
+          <el-button @click="show=false">取 消</el-button>
+        </el-form-item>
+      </el-form>
+    </el-card>
+  </div>
+</template>
+
+<script>
+import { add_news } from "./api_result";
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+
+import { quillEditor } from "vue-quill-editor";
+export default {
+  name: "edit",
+  components: { quillEditor },
+  data() {
+    return {
+      loading: false,
+      show: false,
+      form: {},
+      rules: {
+      {% for column in columns %}
+        {{ column.field }}: [{ required: true, message: "请输入{{ column.description }}", trigger: ["blur"] }],
+      {% endfor %}
+      }
+    };
+  },
+  methods: {
+    show_dialog() {
+      this.show = true;
+      this.loading = false;
+      this.form = {
+      };
+    },
+    reset_form() {
+      this.form = {};
+    },
+    submit() {
+      this.$refs["form"].validate(valid => {
+        if (valid) {
+          this.loading = true;
+          let $this = this;
+          add_news(this.form).then(function(res) {
+            $this.loading = false;
+            if (res.code === 200) {
+              $this.show = false;
+              $this.$emit("fresh");
+            } else {
+              alert(res.message);
+            }
+          });
+        } else {
+          return false;
+        }
+      });
+    }
+  }
+ };
+</script>

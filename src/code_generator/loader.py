@@ -39,6 +39,7 @@ class Loader(metaclass=ABCMeta):
         init the plugin files path, not load the file content,
         lazy load plugins
         """
+        log.info('load file/dir <{%s}>', file_or_dir)
         self.files: Dict[str, str] = {}
         log.info('load the files from : %s', file_or_dir)
         if not os.path.exists(file_or_dir):

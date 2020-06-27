@@ -16,17 +16,28 @@
 
 ## quick start
 
-1 . install command
+1 . clone the repo
 ```shell script
-pip install code-generator
+git clone https://github.com/wj-Mcat/code-generator
 ```
 
-2 . prepare `templates`, `plugins`, `config`
+2 . run the example generation
 
-you should set the prepared 
+```shell script
+./examples/generate.sh
+```
 
-3 . generate codes
+3 . [Optional] change the template to generate your own code
 
+> you can change the code in `examples/config`, `examples/plugins`, `examples/templates`
+
+## command description
+
+> you don't need to write any code to run `code-generator`, only for configuration, templates, plugins
+
+```shell script
+
+```
 
 ## changelog
 
