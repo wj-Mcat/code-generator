@@ -72,8 +72,8 @@ dist:
 	python setup.py sdist bdist_wheel
 
 .PHONY: publish
-publish:
-	PATH=~/.local/bin:${PATH} twine upload dist/*
+publish: clean dist
+		PATH=~/.local/bin:${PATH} twine upload dist/*
 
 .PHONY: version
 version:

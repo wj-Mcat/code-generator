@@ -1,6 +1,6 @@
 # code-generator
 
-![](https://img.shields.io/badge/pypi-0.0.2-brightgreen)
+![](https://img.shields.io/badge/pypi-0.0.3-brightgreen)
 ![](https://img.shields.io/badge/build-passing-brightgreen)
 ![](https://img.shields.io/badge/python-3.7+-brightgreen)
 

@@ -28,6 +28,8 @@ with open('./requirements.txt', 'r+') as f:
 
 with open('./README.md', 'r+') as f:
     long_description = f.read()
+    long_description = 'full document please check the github: ' \
+                       'https://www.github.com/wj-Mcat/code-generator'
 
 setup(
     name='code-generator',
