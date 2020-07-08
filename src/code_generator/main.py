@@ -29,7 +29,7 @@ from .loader import TemplateLoader, PluginLoader
 # pylint: disable=invalid-name
 log = get_logger()
 # pylint: disable=invalid-name
-args: dict = {}
+args_config: dict = {}
 
 
 def run_server():
@@ -46,7 +46,9 @@ def _save_to_file(template_dir: str, file_name: str, content: str):
 
 
 def _read_to_json(file: str) -> dict:
-    """read json file to json data"""
+    """
+    read json file to json data
+    """
     file_path = os.path.join(os.getcwd(), file)
     print(file_path)
     if not os.path.exists(file_path):
@@ -55,16 +57,17 @@ def _read_to_json(file: str) -> dict:
         return json.load(f)
 
 
-def render_by_config():
+def render_by_config(params: dict):
     """render the template with config file mode"""
+    global args_config
+    args = args_config.update(params)
     config = _read_to_json(args['config'])
     plugins = PluginLoader(args['plugins']).load_to_file()
-    log.info(plugins)
     templates = TemplateLoader(args['templates']).load_templates(plugins)
     for name, template in templates.items():
         result = template.render(**config)
-        base_name = os.path.basename(args['templates']) + '_result'
-        _save_to_file(base_name, name, result)
+        dir_name = os.path.basename(args['templates']) + '_result'
+        _save_to_file(dir_name, name, result)
 
 
 def main():
@@ -84,8 +87,8 @@ def main():
     config_parser.set_defaults(func=render_by_config)
 
     local_args = parser.parse_args()
-    log.info(args)
-    args.update(local_args.__dict__)
+    log.info(args_config)
+    args_config.update(local_args.__dict__)
     local_args.func()
 
 

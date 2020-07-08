@@ -4,3 +4,4 @@ import pytest
 
 def test_loader():
     """tests template loader"""
+
