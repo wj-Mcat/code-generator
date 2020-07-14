@@ -21,12 +21,14 @@ jobs:
         with:
           python-version: '3.x'
       - name: Install dependencies
-        run: make install
+        run: |
+          make install
         
   test:
     runs-on: ubuntu-latest
     steps:
-      - run: make test
+      - run: |
+        make test
     
   deploy:
     runs-on: ubuntu-latest
@@ -35,6 +37,4 @@ jobs:
         env:
           TWINE_USERNAME: __token__
           TWINE_PASSWORD: ${{ secrets.PYPI_PASSWORD }}
-        run: |
-          make dist
-          make publish
+        run: make dist & make publish
