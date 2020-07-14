@@ -46,12 +46,12 @@ setup(
     },
     include_package_data=True,
     package_data = {
-        'code_generator': ['vue/*', 'flask/*', 'element.css', 'index.js', 'jquery.min.js', 'template.html', 'vue.js']
+        'code_generator': ['templates/vue/dist/*', 'static/*']
     },
     install_requires=requirements,
     entry_points={
       'console_scripts': [
-          'code-gen = code_generator.main:main'
+          'code-gen=code_generator.main:main'
       ]
   }
 )

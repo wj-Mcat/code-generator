@@ -22,6 +22,7 @@ from __future__ import annotations
 import json
 from argparse import ArgumentParser
 import os
+import uuid
 
 from .config import get_logger
 from .loader import TemplateLoader, PluginLoader
@@ -34,6 +35,8 @@ args_config: dict = {}
 
 def run_server():
     """we can run a simple http server to display the code-generator"""
+    from .server import run_light_server
+    run_light_server()
 
 
 def _save_to_file(template_dir: str, file_name: str, content: str):
@@ -56,11 +59,35 @@ def _read_to_json(file: str) -> dict:
     with open(file_path, 'r+', encoding='utf-8') as f:
         return json.load(f)
 
+def render_from_server(config):
+    """
+    save the config to local json_file
+    """
+    if not os.path.exists('./config'):
+        os.mkdir('./config')
+    file_name = os.path.join('./config', f'config-{uuid.uuid4()}.json')
+    with open(file_name, 'w+', encoding='utf-8') as f:
+        if isinstance(config, dict):
+            config = json.dumps(config)
+        assert isinstance(config, str)
+        f.write(config)
+    render_by_config({
+        'config': file_name,
+        'templates': 'templates',
+        'plugins': 'plugins'
+    })
+
 
 def render_by_config(params: dict):
     """render the template with config file mode"""
-    global args_config
-    args = args_config.update(params)
+    # pylint: disable=global-statement
+    if params:
+        args = params
+    else:
+        global args_config
+        args = args_config.update(params)
+        assert args is not None
+
     config = _read_to_json(args['config'])
     plugins = PluginLoader(args['plugins']).load_to_file()
     templates = TemplateLoader(args['templates']).load_templates(plugins)
@@ -75,9 +102,6 @@ def main():
     parser = ArgumentParser()
     subparsers = parser.add_subparsers(help='sub command')
     serve_parser = subparsers.add_parser(name='serve')
-    serve_parser.add_argument('--model', default='models', type=str)
-    serve_parser.add_argument('--port', default=5002, type=int)
-    serve_parser.add_argument('--file', default='config.json', type=str)
     serve_parser.set_defaults(func=run_server)
 
     config_parser = subparsers.add_parser(name='render')

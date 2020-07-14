@@ -75,12 +75,8 @@ dist:
 publish: clean dist
 		PATH=~/.local/bin:${PATH} twine upload dist/*
 
-.PHONY: version
-version:
-	@newVersion=$$(awk -F. '{print $$1"."$$2"."$$3+1}' < VERSION) \
-		&& echo $${newVersion} > VERSION \
-		&& echo VERSION = \'$${newVersion}\' > src/version.py \
-		&& git add VERSION src/version.py \
-		&& git commit -m "$${newVersion}" > /dev/null \
-		&& git tag "v$${newVersion}" \
-		&& echo "Bumped version to $${newVersion}"
+.PHONY: local_dist
+local_dist:
+	pip uninstall code-generator
+	make dist
+	pip install dist/code_generator-0.0.3-py3-none-any.whl
