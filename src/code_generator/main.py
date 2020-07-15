@@ -23,6 +23,7 @@ import json
 from argparse import ArgumentParser
 import os
 import uuid
+from typing import Optional
 
 from .config import get_logger
 from .loader import TemplateLoader, PluginLoader
@@ -78,7 +79,7 @@ def render_from_server(config):
     })
 
 
-def render_by_config(params: dict):
+def render_by_config(params: Optional[dict] = None):
     """render the template with config file mode"""
     # pylint: disable=global-statement
     if params:
@@ -111,9 +112,9 @@ def main():
     config_parser.set_defaults(func=render_by_config)
 
     local_args = parser.parse_args()
-    log.info(args_config)
+    global args_config
     args_config.update(local_args.__dict__)
-    local_args.func()
+    local_args.func(args_config)
 
 
 if __name__ == '__main__':
