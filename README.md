@@ -1,6 +1,6 @@
 # code-generator
 
-![](https://img.shields.io/badge/pypi-0.0.3-brightgreen)
+![Upload Python Package](https://github.com/wj-Mcat/code-generator/workflows/Upload%20Python%20Package/badge.svg)
 ![](https://img.shields.io/badge/build-passing-brightgreen)
 ![](https://img.shields.io/badge/python-3.7+-brightgreen)
 

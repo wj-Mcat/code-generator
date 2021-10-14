@@ -5,7 +5,7 @@ pycodestyle
 pylint
 pylint-quotes
 pytest
-pytype==2020.6.26
+pytype==2021.10.11
 semver
 requests
 twine
