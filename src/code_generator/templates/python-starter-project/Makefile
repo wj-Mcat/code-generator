@@ -6,7 +6,7 @@
 
 SOURCE_GLOB=$(wildcard bin/*.py src/**/*.py tests/**/*.py examples/*.py)
 
-IGNORE_PEP=E203,E221,E241,E272,E501,F811,
+IGNORE_PEP=E203,E221,E241,E272,E501,F811,C0115
 
 # help scripts to find the right place of wechaty module
 export PYTHONPATH=src/
@@ -21,13 +21,11 @@ clean:
 .PHONY: lint
 lint: pylint pycodestyle flake8 mypy
 
-
-# disable: TODO list temporay
 .PHONY: pylint
 pylint:
 	pylint \
 		--load-plugins pylint_quotes \
-		--disable=W0511,R0801,cyclic-import,C0115,C0116,C0209,C0301,R0903 \
+		--disable=W0511,R0801,cyclic-import,C0115 \
 		$(SOURCE_GLOB)
 
 .PHONY: pycodestyle
