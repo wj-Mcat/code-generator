@@ -1,0 +1,14 @@
+{
+  "model": "entity_type",
+  "Model": "EntityType",
+  "description": "槽位类别",
+  "columns": [{
+    "field": "key",
+    "description": "关键字",
+    "type": "str"
+  },{
+    "field": "name",
+    "description": "别名",
+    "type": "str"
+  }]
+}

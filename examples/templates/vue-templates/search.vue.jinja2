@@ -1,0 +1,97 @@
+<template>
+  <el-card class="box-card margin-space">
+    <div slot="header">
+      <span>高级筛选</span>
+    </div>
+    <!--      筛选表单-->
+    <el-form :inline="true" :model="form" ref="form" class="demo-form-inline" label-width="120px">
+    {% for column in columns -%}
+      <el-form-item label="{{column.description}}" prop="{{column.field}}">
+          {% if column.foreign_table -%}
+          <el-select
+          v-model="form.{{column.field}}"
+          style="width: 100%"
+          :remote-method="$remote_select('{{column.foreign_table}}', '{{column.foreign_key}}', '{{column.foreign_label}}', this, '{{column.foreign_table}}List')"
+          filterable
+          remote
+          reserve-keyword
+        >
+          <el-option
+            v-for="item in {{column.foreign_table}}List"
+            :key="item.{{column.foreign_key}}"
+            :value="item.{{column.foreign_key}}"
+            :label="item.{{column.foreign_label}}"
+          ></el-option>
+        </el-select>
+        {% elif column.auto_complete %}
+        <el-autocomplete
+          class="inline-input"
+          v-model="form.{{column.field}}"
+          :fetch-suggestions="{{column.field}}_query_search"
+          :trigger-on-focus="true"
+          value-key="{{column.field}}"
+          placeholder="请输入内容"
+        ></el-autocomplete>
+          {% else -%}
+        <el-input v-model="form.{{column.field}}" placeholder="请输入{{column.description}}" />
+          {%- endif %}
+      </el-form-item>
+      {%- endfor %}
+      <div style="margin-left:50px">
+        <el-form-item>
+          <el-button type="primary" @click="search">查询</el-button>
+        </el-form-item>
+        <el-form-item>
+          <el-button @click="reset_search()">重置</el-button>
+        </el-form-item>
+      </div>
+    </el-form>
+  </el-card>
+</template>
+
+<script>
+    export default {
+      name: "search",
+      data(){
+        return{
+        {% for column in columns -%}
+          {% if column.foreign_table -%}
+          {{column.foreign_table}}List: [],
+          {% else -%}
+          {% endif -%}
+        {%- endfor %}
+          form:{}
+        }
+      },
+      methods:{
+        get_search_params(){
+          // 此函数也提供给父组件调用
+          let query = Object.assign({},this.form);
+          delete query["time"];
+          return query;
+        },
+        search(){
+          this.$emit("fresh");
+        },
+        {% for column in columns %}
+        {% if column.auto_complete %}
+        {{column.field}}_query_search(queryString, cb) {
+          this.$remote_autocomplete('{{Model}}', '{{column.field}}', queryString).then(function(res){
+            if ('data' in res){
+              cb(res['data'])
+            }
+        })
+        },
+        {% endif %}
+        {% endfor %}
+        reset_search(){
+          this.form={};
+          this.search();
+        }
+      }
+    }
+</script>
+
+<style scoped>
+
+</style>

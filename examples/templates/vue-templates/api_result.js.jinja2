@@ -1,0 +1,52 @@
+// {{description}}管理管理
+import request from '@/utils/request'
+
+//新增{{description}}管理
+export function add_{{model}}(data){
+  return request({
+    url: '/{{model}}',
+    method: 'post',
+    data
+  })
+}
+//批量导入{{description}}管理
+export function import_{{model}}(data){
+  return request({
+    url: '/{{model}}/import',
+    method: 'post',
+    data
+  })
+}
+//删除{{description}}管理
+export function delete_{{model}}({{model}}_id){
+  return request({
+    url: '/{{model}}/' + {{model}}_id,
+    method: 'delete',
+  })
+}
+//更新{{description}}管理
+export function update_{{model}}(data){
+  return request({
+    url: '/{{model}}/' + data["{{model}}_id"] ,
+    method: 'put',
+    data
+  })
+}
+//查询{{description}}管理
+export function query_{{model}}(data){
+  return request({
+    url: '/{{model}}/query' ,
+    method: 'post',
+    data
+  })
+}
+
+export let list = [
+  {% for i in list -%}
+  {
+    {% for column in columns -%}
+    "{{column.field}}": "{{column.description}}-{{i}}",
+    {% endfor %}
+  },
+  {% endfor %}
+]

@@ -79,4 +79,4 @@ publish: clean dist
 local_dist:
 	pip uninstall code-generator
 	make dist
-	pip install dist/code_generator-0.0.3-py3-none-any.whl
+	pip install --force-reinstall dist/code_generator-0.0.10-py3-none-any.whl

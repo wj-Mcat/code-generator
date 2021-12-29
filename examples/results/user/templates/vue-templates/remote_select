@@ -1,0 +1,13 @@
+<el-select
+  v-model="form.room_id"
+  :remote-method="$remote_select('Room', 'room_id', 'room_name', this, 'room_options')"
+  filterable
+  remote
+  reserve-keyword>
+  <el-option
+    v-for="item in room_options"
+    :key="item.room_id"
+    :value="item.room_id"
+    :label="item.room_name">
+  </el-option>
+</el-select>

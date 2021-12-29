@@ -1,0 +1,16 @@
+
+{
+  "model": "regex_extractor",
+  "Model": "RegexExtractor",
+  "description": "正则化抽取器",
+  "columns": [{
+    "field": "name",
+    "description": "别名",
+    "type": "str"
+  },{
+    "field": "module",
+    "description": "Module Path",
+    "type": "str"
+    }
+  ]
+}

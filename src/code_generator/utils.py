@@ -17,8 +17,14 @@ def load_files_or_directories(base_dir: str) -> List[Union[File, Directory]]:
     Returns: List of File/Directory object
     """
     files_or_directories: List[Union[File, Directory]] = []
+
+    if not os.path.exists(base_dir):
+        return []
+
+    file_or_dirs = os.listdir(base_dir)
+
     # 1. find all files/directories in the current dir
-    for file_or_dir in os.listdir(base_dir):
+    for file_or_dir in file_or_dirs:
 
         path = os.path.join(base_dir, file_or_dir)
         # 2. if there is dir, find with recursion mode
@@ -75,3 +81,13 @@ def load_config(file: str):
     with open(file, 'r', encoding='utf-8') as file_handler:
         data = json.load(file_handler)
     return data
+
+
+def get_file_name(file: str):
+    if not os.path.isfile(file):
+        raise FileExistsError(f'<{file}> is not the file ...')
+
+    _, file_type = os.path.splitext(file)
+    file_full_name = os.path.basename(file)
+    file_name = file_full_name.replace(file_type, '')
+    return file_name

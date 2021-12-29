@@ -50,7 +50,7 @@ setup(
     install_requires=requirements,
     entry_points={
         'console_scripts': [
-            'code-gen=code_generator.cli.main'
+            'code-gen = code_generator.cli:main'
         ]
     }
 )
