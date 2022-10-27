@@ -10,7 +10,7 @@
 ## features
 
 - can generate all-language code, eg: `python`, `vue`, `java`, `scala`, `go` and more
-- generate code with powerful template **<jinja2>**
+- generate code with powerful template(**jinja2**) 
 - template can contains control command, eg: `if`, `for`, `set variable`
 - can **easily** run on other template repo.
 
@@ -19,6 +19,8 @@
 1 . clone the repo
 ```shell script
 git clone https://github.com/wj-Mcat/code-generator
+# or
+pip install code-generator
 ```
 
 2 . run the example generation
@@ -40,6 +42,10 @@ git clone https://github.com/wj-Mcat/code-generator
 ```
 
 ## changelog
+
+- version 0.0.3
+  - enable template & output dir
+  - add default python github project with CI testing toolkit
 
 - version 0.0.2
     - complete the basic interface: `templates`, `plugins`, `config`

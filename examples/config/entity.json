@@ -1,0 +1,22 @@
+{
+  "model": "entity",
+  "Model": "Entity",
+  "description": "槽位数据",
+  "columns": [{
+    "field": "key",
+    "description": "关键字",
+    "type": "str"
+  },{
+    "field": "alias",
+    "description": "别名",
+    "type": "str"
+  },{
+    "field": "entity_type_id",
+    "description": "实体类型",
+    "type": "int"
+  },{
+    "field": "entity_value_type",
+    "description": "实体数据类型",
+    "type": "int"
+  }]
+}

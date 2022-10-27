@@ -1,0 +1,107 @@
+"""
+{{Model}} api file
+"""
+from flask import Blueprint, request, current_app, jsonify
+from chatbot_server.extensions import db
+from chatbot_server.utils import database_utils as dbu
+from chatbot_server.utils import data_utils as du
+from chatbot_server.models.general import {{Model}}
+from chatbot_server.blueprints.general import general_bp
+
+
+@general_bp.route('/{{model}}/query', methods=['POST'])
+def get_{{model}}s():
+    """获取{{name}}列表"""
+    params = request.get_json(force=True)["list_query"]
+    du.time_start_end(params, "create_time")
+    try:
+        model_filter = dbu.build_filter("{{Model}}", params)
+    except Exception as e:
+        current_app.logger.warning(e)
+        return dbu.inner_error("查询{{name}}失败")
+
+    query = {{Model}}.query.filter(*model_filter)
+    return dbu.paginate_data(query, params)
+
+
+@general_bp.route('/{{model}}/<int:{{model}}_id>', methods=['GET'])
+def get_{{model}}({{model}}_id: int):
+    """获取单个{{name}}数据"""
+    {{model}} = {{Model}}.query.filter(
+        {{Model}}.{{model}}_id == {{model}}_id
+    ).first()
+
+    if not {{model}}:
+        return dbu.inner_error("该{{name}}不存在或已被删除")
+    return jsonify({"code": 200, "data": {{model}}})
+
+
+@general_bp.route('/{{model}}', methods=['POST'])
+def add_{{model}}():
+    """新增{{name}}"""
+    data = request.get_json()
+
+    {{model}} = {{Model}}()
+    dbu.update({{model}}, data)
+    db.session.add({{model}})
+    try:
+        db.session.commit()
+    except Exception as e:
+        current_app.logger.warning(e)
+        db.session.rollback()
+        return dbu.inner_error("新增{{name}}失败")
+    return jsonify(
+        {
+            "data": {"{{model}}_id": {{model}}.{{model}}_id},
+            "code": 200,
+            "msg": "新增{{name}}成功"
+        }
+    )
+
+@general_bp.route('/{{model}}/<int:{{model}}_id>', methods=['PUT'])
+def update_{{model}}({{model}}_id: int):
+    """更新{{name}}"""
+    data: dict = request.get_json()
+
+    {{model}} = {{Model}}.query.filter(
+        {{Model}}.{{model}}_id == {{model}}_id
+    ).first()
+
+    if not {{model}}:
+        return dbu.inner_error("该{{name}}不存在或已被删除")
+
+    dbu.update({{model}}, data)
+
+    try:
+        db.session.commit()
+    except Exception as e:
+        current_app.logger.warning(e)
+        db.session.rollback()
+        return dbu.inner_error("更新{{name}}失败")
+    return jsonify(
+        {"data":
+             {"{{model}}_id": {{model}}.{{model}}_id},
+         "code": 200,
+         "msg": "更新角色成功"
+         }
+    )
+
+
+@general_bp.route('{{model}}/<int:{{model}}_id>', methods=['DELETE'])
+def delete_{{model}}({{model}}_id: int):
+    """删除{{name}}"""
+    {{model}} = {{Model}}.query.filter(
+        {{Model}}.{{model}}_id == {{model}}_id
+    ).first()
+
+    if not {{model}}:
+        return dbu.inner_error("该{{name}}不存在或已被删除")
+
+    db.session.delete({{model}})
+    try:
+        db.session.commit()
+    except Exception as e:
+        current_app.logger.warning(e)
+        db.session.rollback()
+        return dbu.inner_error("删除{{name}}失败")
+    return jsonify({"data": {"{{model}}_id": {{model}}_id}, "code": 200, "msg": "删除角色成功"})

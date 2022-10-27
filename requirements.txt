@@ -1,2 +1,5 @@
 flask
 flask-cors
+loguru
+typed-argument-parser
+jinja2

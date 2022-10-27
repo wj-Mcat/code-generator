@@ -6,7 +6,7 @@
 
 SOURCE_GLOB=$(wildcard bin/*.py src/**/*.py tests/**/*.py examples/*.py)
 
-IGNORE_PEP=E203,E221,E241,E272,E501,F811
+IGNORE_PEP=E203,E221,E241,E272,E501,F811,
 
 # help scripts to find the right place of wechaty module
 export PYTHONPATH=src/
@@ -27,7 +27,7 @@ lint: pylint pycodestyle flake8 mypy
 pylint:
 	pylint \
 		--load-plugins pylint_quotes \
-		--disable=W0511,R0801,cyclic-import \
+		--disable=W0511,R0801,cyclic-import,C0115,C0116,C0209,C0301,R0903 \
 		$(SOURCE_GLOB)
 
 .PHONY: pycodestyle
@@ -79,4 +79,4 @@ publish: clean dist
 local_dist:
 	pip uninstall code-generator
 	make dist
-	pip install dist/code_generator-0.0.3-py3-none-any.whl
+	pip install --force-reinstall dist/code_generator-0.0.10-py3-none-any.whl

@@ -1,0 +1,22 @@
+{
+  "model": "user",
+  "Model": "User",
+  "description": "用户",
+  "columns": [{
+    "field": "nick_name",
+    "description": "昵称",
+    "type": "str"
+  },{
+    "field": "username",
+    "description": "用户名",
+    "type": "str"
+  },{
+    "field": "password",
+    "description": "用户密码",
+    "type": "str"
+  },{
+    "field": "remark",
+    "description": "备注",
+    "type": "str"
+  }]
+}

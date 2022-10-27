@@ -18,26 +18,58 @@ See the License for the specific language governing permissions and
 limitations under the License.
 """
 from __future__ import annotations
+import os
 
-import logging
+from tap import Tap
+from loguru import logger
 
 
 def get_logger():
-    """get the logger"""
-    log_formatter = logging.Formatter(
-        fmt='%(asctime)s - %(name)s - %(levelname)s - %(filename)s - '
-            '%(funcName)s - %(message)s')
-
-    logger = logging.getLogger('CodeGenerator')
-
-    logger.handlers.clear()
-    logger.setLevel(logging.DEBUG)
-    logger.propagate = False
-
-    # create console handler and set level to info
-    console_handler = logging.StreamHandler()
-    console_handler.setLevel(logging.INFO)
-    console_handler.setFormatter(log_formatter)
-    logger.addHandler(console_handler)
-
+    """
+    use the loguru as the default logger
+    """
     return logger
+
+
+class Arguments(Tap):
+    output_dir: str = './output'
+    templates: str = './templates'
+    plugins: str = './plugins'
+    config: str = './config.json'
+
+
+class File:
+    def __init__(self, path: str):
+        if not os.path.isfile(path):
+            raise IsADirectoryError(f'path<{path}> is not a file')
+
+        self.file_name = os.path.basename(path)
+        self.file_dir = os.path.dirname(path)
+        self.path = path
+
+    @property
+    def type(self) -> str:
+        _, file_type = os.path.splitext(self.path)
+        return file_type
+
+    @property
+    def content(self):
+        """
+        get the content of file
+        """
+        with open(self.path, 'r', encoding='utf-8') as file:
+            content = file.read()
+        return content
+
+    def __str__(self):
+        return f'File<{self.path}>'
+
+
+class Directory:
+    def __init__(self, path: str):
+        if not os.path.isdir(path):
+            raise IsADirectoryError()
+        self.path = path
+
+    def __str__(self):
+        return f'Directory<{self.path}>'
